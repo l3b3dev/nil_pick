@@ -1,0 +1,24 @@
+{
+	"data": {
+		 "filename": "Walmart_data_v1_July_12.csv",
+		 "columns": 
+                             {
+                                "numerical": ["ORIG_SALES_ORDER_LINE_NUM", "ORIG_ITEM_PRICE_AMT", "ITEM_WT_QTY", "ORDER_QTY", "PRICE_MATCH_AMT", "PROMO_AMT", "PO_LINE_NUM"],            
+                              "categorical": ["ITEM_WT_UOM_CD", "FULFMT_TYPE_DESC"], 
+                              "time_stamps": ["ORDER_PLCD_LCL_TS", "ORDER_SLOT_LCL_START_TS", "EPOS_CMPL_LCL_DT"],
+                             "multiplicity": ["PICKED_QTY", "NIL_PICKED_QTY"],
+                                   "target": ["PICK_STATUS_CD"],
+                                 "store_id": ["STORE_ID"],
+                            "department_id": [  ]
+                             }
+                 }, 
+	"model": { 
+                  "max_depth": 6,                                     
+                        "eta": 0.3,                                         
+                     "silent": 1,                                       
+                  "objective": "multi:softprob",                     
+                  "num_class": 2,
+                   "save_dir": "./saved_models",
+                  "num_round": 100
+                  }	
+}
