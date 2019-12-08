@@ -51,13 +51,13 @@ class XGB_Model():
             best_preds = np.asarray([np.argmax(line) for line in preds])   # extracting most confident predictions
             print("Numpy array precision:", precision_score(y_test, best_preds, average='macro') )
             print('plotting...', eval_meth)                                # get importance scores based on following methods:  
-            #plt.subplot( 1, 1, 1)                                          # weight, gain, cover, total_gain, total_cover
+            plt.subplot( 1, 1, 1)                                          # weight, gain, cover, total_gain, total_cover
             props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
             dct=model.get_score(importance_type=str(eval_meth))
             #plt.text(5.5, 38, textstr, fontsize=10, verticalalignment='top', bbox=props)
             l_first, Col_name_1, l_second, Col_name_2 = plot_importance.plotbar(dct, L, LP_rat, str(eval_meth), cluster_number, precision_score(y_test, best_preds, average='macro'))  # call utils function 'plot importance'
             print('plotting', eval_meth ,'done!')
-            #plt.show() 
+            plt.show()
             return l_first, l_second
 
 
