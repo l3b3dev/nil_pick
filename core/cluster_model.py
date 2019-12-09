@@ -14,13 +14,13 @@ class Cluster_Model():
 
        def load_model(self, filepath):
             print('[Model] Loading model from file %s' % filepath)
-            self.model = load_model(filepath)
+            self.model = filepath
 
        def preproc_for_clust(self, ):
 
-           top_stores_top_depts = pd.read_csv("/Users/vn50c26/Documents/NilPicks/top_stores_all_depts_nil_picks.csv")
-           top_depts = pd.read_csv("/Users/vn50c26/Documents/NilPicks/top_depts_nil_picks.csv")
-           dept_names = pd.read_csv("/Users/vn50c26/Documents/NilPicks/depts.csv")
+           top_stores_top_depts = pd.read_csv("./info_from_preproc/top_stores_all_depts_nil_picks.csv")
+           top_depts = pd.read_csv("./info_from_preproc/top_depts_nil_picks.csv")
+           dept_names = pd.read_csv("./info_from_preproc/depts.csv")
 
            top_dept_names = pd.merge(top_depts, dept_names, on = "dept_nbr")
 
@@ -61,7 +61,7 @@ class Cluster_Model():
            
            return stores_prep2_sc
 
-       def train_clustering(): 
+       def train_clustering(self,stores_prep2, stores_prep2_sc):
 
            Sum_of_Sq_Dist = []
            K = range(1,21)
@@ -100,8 +100,6 @@ class Cluster_Model():
            store_cluster = stores_prep2[["cluster"]].reset_index(level=['store_id'])
            clust_store_list = store_cluster.groupby('cluster')['store_id'].apply(lambda x: ", ".join(x.astype(str)))
 
-
-       def pred_clustering():
 
 
 

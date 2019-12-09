@@ -36,7 +36,7 @@ def plotbar(dct, L, LP_rat, method, cluster, precision, pop=False):
 
     # Define feature names
     Col_names=[ "orig_sales_order_line_num", "unit_price_amt", "item_wt_qty", "order_qty", "price_match_amt", "promo_amt", "po_line_num", "item_wt_uom_cd", "fulfmt_type_desc"]
- 
+
     Feature_names= ['f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8'] 
 
     textstr=str()

@@ -14,6 +14,8 @@ from core.data_processor import DataLoader
 from core.xgb_model import XGB_Model
 from s3fs.core import S3FileSystem
 #from core.cluster_model import Cluster_Model
+from xgboost.sklearn import XGBClassifier
+#from sklearn.grid_search import GridSearchCV   #Perforing grid search
 
 # import modules from utils
 from utils import equal_class 
@@ -62,6 +64,7 @@ def main(do_preprocessing, do_clustering, do_dictionary, do_xgboost):
         #print('Running the clustering algorithm...')
         #cluster_model = Cluster_Model()                                                              # Load the "Clustering_Model" class
         #clusters = cluster_model.run_clustering(       )                                             # run_clustering algorithm and output clusters
+        #clustering does not do better then grouping by mdse_catg_nbr so keeping defaults
         print('Done!')    
     else:
         new_clusters=[]
@@ -99,6 +102,21 @@ def main(do_preprocessing, do_clustering, do_dictionary, do_xgboost):
                    xgb_model.xgb_train(X_train, y_train, configs, 'gain', cl)                          # this saves the models as pickle files in saved models folder 
                    print('Done!', ' Running the prediction based on a saved model...', ' using', len(X_train), '-many data')
                    l_first, l_second = xgb_model.xgb_pred(X_test, y_test, 'gain', cl, len(X_train), LP_rat)
+
+                   # tune params
+                   # tune_params = {
+                   #     'max_depth': range(3, 10, 2),
+                   #     'min_child_weight': range(1, 6, 2)
+                   # }
+                   # gsearch = GridSearchCV(estimator=XGBClassifier(learning_rate=0.1, n_estimators=140, max_depth=5,
+                   #                                                min_child_weight=1, gamma=0, subsample=0.8,
+                   #                                                colsample_bytree=0.8,
+                   #                                                objective='binary:logistic', nthread=4,
+                   #                                                scale_pos_weight=1,
+                   #                                                seed=27),
+                   #                        param_grid=tune_params, scoring='roc_auc', n_jobs=4, iid=False, cv=5)
+                   # gsearch.fit(X_train, X_test)
+                   # gsearch.grid_scores_, gsearch.best_params_, gsearch.best_score_
 
                    title=l_first
 
@@ -198,9 +216,8 @@ def main(do_preprocessing, do_clustering, do_dictionary, do_xgboost):
 #############################################################
 if __name__ == '__main__':
     main(do_preprocessing=False, do_clustering=True, do_dictionary=False, do_xgboost=True)
-
     print('Main done!')
- 
+
     # Use_Case 1. To preprocess a csv file:                           do_preprocessing=True,  do_clustering=False, do_dictionary=False, do_xgboost=False
     # Use_Case 2. To create clusters on an existing'train_array.txt'  do_preprocessing=False, do_clustering=True,  do_dictionary=False, do_xgboost=False 
     # Use_Case 3: To create a dictionary on a train_array.txt file:   do_preprocessing=False, do_clustering=False, do_dictionary=True,  do_xgboost=True
