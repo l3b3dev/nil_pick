@@ -10,14 +10,23 @@ We will try to address the nil picking problem in this project. This problem is 
    # Use_Case 4. To pre-process, cluster, dictionary and xgboost:    do_preprocessing=True,  do_clustering=True,  do_dictionary=True,  do_xgboost=True
 ```
 
-*Preprocessing
+* Preprocessing
+    * We first need to preprocess the data by configuring the program in [Run program](run.py) with _do_preprocessing=True, do_clustering=False, do_dictionary=False, do_xgboost=False_
+This will rely on our [DataLoader](./core/data_processor.py)  class which has methods to _preprocess_numerical, preprocess_categorical, preprocess_target_ and methods related to creating cluster dictionary. Those methods mostly involve data cleaning/normalization as well as dumping statistics to _sanity_checks_ folder. The main output of those methods are _numberical_data, categorical_data_ and _target_ arrays which will get _np.hstack_ into _train_array_ which will be saved in _./info_from_preproc/train_array.txt_  
 
-*Clustering
- We first need to preprocess the data by configuring the program in run.py with do_preprocessing=True, do_clustering=False, do_dictionary=False, do_xgboost=False
-This will rely on our DataLoader class which has methods to preprocess_numerical, preprocess_categorical, preprocess_target and methods related to creating cluster dictionary. Those methods mostly involve data cleaning/normalization as well as dumping statistics to sanity_checks folder. The main output of those methods are numberical_data, categorical_data and target arrays which will get np.hstack into train_array which will be saved in ./info_from_preproc/train_array.txt  
+* Clustering
+    * The clustering is done by configuring the program in [Run program](run.py) with
+_do_preprocessing=False, do_clustering=True, do_dictionary=True, do_xgboost=False_
+Its implemented in [ClusterModel](./core/cluster_model.py). This attempts to run KMeans clustering to have balanced classes in each category. We attempt cluster sizes from 1 to 21 then use Elbow Method for optimum clusters. Our default clusters are just grouping by category number (_mdse_catg_nbr_). And as it turned out from many runs, KMeans were not very meaningful here and actually grouping by category number was always a better choice.
+ 
+* Dictionary Creation
+    * Once the clustering is decided for convenience we load _train_array_ into memory in the form of a dictionary by delegating to [DataLoader](./core/data_processor.py) class _create_train_dct_ method. It will initialize the key for each cluster in the dictionary and loop over all data rows of feature _“mdse_cat_nbr_” and append ith entry to the key, specific to the category-cluster.
+    
+* XGBoost
+    * Running XGBoost is done by configuring the program in [Run program](run.py) with
+_do_preprocessing=False, do_clustering=True, do_dictionary=False, do_xgboost=True_
+The work is performed by [XGB_Model](./core/xgb_model.py) class which contains _xgb_train_ and _xgb_pred_ methods. In our training we create the Xgboost specific DMatrix data format from our existing numpy array. Then we set xgboost params (maximum depth of tree, training steps, number of classes) finally after running the training we store the model in _./saved_models/cluster_{clusterID}_. In prediction we load the model and extract most confident predictions, get importance scores based on _weight, gain, cover, total_gain_ and _total_cover_. 
 
-*Dictionary Creation
-
-*XGBoost
-
-*Parameters finetuning
+* Parameters finetuning
+    * We repeatedly run XGBoost using gbtree as a booster while varying the following hyper parameters of XGBoost: 
+_max_depth, eta, gamma, min_child_weight, max_delta_step, subsample, and L1 regularization (alpha), L2 regularization (lambda)_. We evaluated results by running _GridSearchCV_ method. Empirically, we found that we can achieve over 90% desired accuracy by using _max_depth=8, eta=0.3, gamma=0, min_child_weight=3,max_delta_step=1_ and taking defaults for the rest of params.
