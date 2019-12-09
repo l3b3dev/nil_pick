@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from sklearn.externals import joblib
 from core.data_processor import DataLoader
 from core.xgb_model import XGB_Model
+from s3fs.core import S3FileSystem
 #from core.cluster_model import Cluster_Model
 
 # import modules from utils
@@ -25,7 +26,7 @@ def main(do_preprocessing, do_clustering, do_dictionary, do_xgboost):
     configs = json.load(open('config.json', 'r'))                                                           # load json configuration file, that points to data csv file
     if not os.path.exists(configs['model']['save_dir']): os.makedirs(configs['model']['save_dir'])          # 
     print('Reading csv file: '+ str(configs['data']['filename']) + ' reading...')
-    dataframe = pd.read_csv( os.path.join('data', configs['data']['filename']) )                            # load csv file
+    dataframe = pd.read_csv( configs['data']['filename'])                            # load csv file
     print('Done!')
     data=DataLoader(dataframe)                                                                              # define the dataframe as 'data'
     
@@ -196,7 +197,9 @@ def main(do_preprocessing, do_clustering, do_dictionary, do_xgboost):
 #### Choose Use Cases and edit main() accordingly ###########
 #############################################################
 if __name__ == '__main__':
-    main(do_preprocessing=False, do_clustering=True, do_dictionary=False, do_xgboost=True)    
+    main(do_preprocessing=False, do_clustering=True, do_dictionary=False, do_xgboost=True)
+
+    print('Main done!')
  
     # Use_Case 1. To preprocess a csv file:                           do_preprocessing=True,  do_clustering=False, do_dictionary=False, do_xgboost=False
     # Use_Case 2. To create clusters on an existing'train_array.txt'  do_preprocessing=False, do_clustering=True,  do_dictionary=False, do_xgboost=False 

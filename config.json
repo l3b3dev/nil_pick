@@ -1,6 +1,6 @@
 {
 	"data": {
-		 "filename": "new_cat_data.csv",
+		 "filename": "s3://ids-2019data/new_cat_data.csv",
 		 "columns": 
                              {
                                 "numerical": ["orig_sales_order_line_num", "unit_price_amt", "item_wt_qty", "order_qty", "price_match_amt", "promo_amt", "po_line_num"],            
