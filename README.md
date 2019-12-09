@@ -1,7 +1,7 @@
 # nil_pick
 
 We will try to address the nil picking problem in this project. This problem is very common for online ordering e-commerce platforms like Amazon, Walmart or Fanatics. The nil pick occurs when one or more orders are received for a product and when an insufficient amount of the product exists at the warehouse to satisfy the one or more orders.  The problem also exists if there is a human fulfilling the order in the warehouse and he cannot locate the product, but the product exists or is misplaced. When the order comes in it has a lot of data related to it and the main idea is to be able to predict for each row of orders if this row is going to be nil picked. We also would like to know which features that were used for the decision making are important and which are not
-
+![Image of Yaktocat](https://github.com/lightningorders/nilpick.png)
 * To Run modify [Run program](run.py) for the following use cases.  Default is Use_Case 4
 ```python
    # Use_Case 1. To preprocess a csv file:                            do_preprocessing=True,  do_clustering=False, do_dictionary=False, do_xgboost=False
